@@ -1,4 +1,4 @@
-import { LoginCard } from "@/components/auth/LogInCard";
+import { LoginCard } from "@/components/auth/login-card";
 
 export const Login = () => {
 

@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from '@/app/providers'
 import { Navbar } from "@/components/ui/navbar";
-import { TurnkeyIframe } from "@/components/auth/TurnkeyIframe";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          {/* <Navbar />
-          <TurnkeyIframe /> */}
-        {children}
+          <Navbar />
+          {children}
         </Providers>
       </body>
     </html>

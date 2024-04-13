@@ -30,6 +30,5 @@ export async function POST(
       status: res.status,
     });
   }
-
   return NextResponse.json(await res.json());
 }

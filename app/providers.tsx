@@ -11,9 +11,11 @@ export const Providers = (props: PropsWithChildren) => {
 
    return (
       <QueryClientProvider client={queryClient}>
+         <Suspense fallback={<div>Loading...</div>}>
          <AlchemyAccountProvider config={config} queryClient={queryClient}>
             {props.children}
          </AlchemyAccountProvider>
+         </Suspense>
       </QueryClientProvider>
    )
 }

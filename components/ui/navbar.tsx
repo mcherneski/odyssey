@@ -1,15 +1,30 @@
 'use client'
 import {Button} from '@/components/ui/button'
-import { useAuthenticate, useUser } from '@alchemy/aa-alchemy/react'
+import { useUser, useSigner, useSignerStatus } from '@alchemy/aa-alchemy/react'
 import { useState } from 'react'
 import { LoginCard } from '@/components/auth/login-card'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export const Navbar = () => {
    const [showAuthCard, setShowAuthCard] = useState<boolean>(false)
-   const  user = useUser()
-   const {authenticate, isPending} = useAuthenticate()
+   const signer = useSigner()
+   const { status } = useSignerStatus()
+   const user = useUser()
+   const router = useRouter()
+   const searchParams = useSearchParams()
    
+   if (searchParams)
+      {
+         const strSearchParams = searchParams.toString()
+         if (strSearchParams.includes('orgId'))
+            {
+               router.push('/')
+            }
+      }
+ 
    console.log('Authenticated user: ', user)
+   console.log('Signer Status: ', status)
+
    const handleLoginClick = () => {
       setShowAuthCard(true)
    }
@@ -18,17 +33,25 @@ export const Navbar = () => {
       setShowAuthCard(false)
    }
 
-   if (isPending) {
-      return <div>Loading...</div>
+   const handleLogout = async () => {
+      if (signer && user && status === 'CONNECTED') {
+         await signer.disconnect()  
+      }
    }
 
    return(
-      <div>
-         {user ? (
+      <div className='flex flex-row text-center bg-cyan-500 justify-between items-center h-12'>
+         <h1
+            className='flex text-2xl m-4'
+         >
+            Odyssey
+         </h1>
+         {status === 'CONNECTED' ? (
             <Button
-               className=''
-               onClick={() => console.log('Log Out')}
+               className='flex'
+               onClick={handleLogout}
                variant='default'
+               size='lg'
             >
                Log Out
             </Button>
@@ -46,47 +69,3 @@ export const Navbar = () => {
       </div>
    )
 }
-
-
-
-
-
-
-
-
-// const [signer] = useState<AlchemySigner | undefined>(() => {
-//    if (typeof window === 'undefined') return undefined
-
-//    return new AlchemySigner({
-//       client: {
-//          connection: {
-//             rpcUrl: '/api/rpc',
-//          },
-//          iframeConfig: {
-//             iframeContainerId: 'turnkey-iframe-container',
-//          }
-//       }
-//    })
-// })
-
-// const { user, account, isLoadingUser } = useAuthenticateUser(signer)
-
-// return (
-//    <>
-//       <TurnkeyIframe />
-//       <nav className='flex min-w-screen flex-row items-center justify-center gap-4 py-24'>
-//          {isLoadingUser ? (
-//             //Loading Spinner
-//             <div className='flex items-center justify-center'>
-//                <div
-//                   className='text-surface inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white'
-//                   role='status'
-//                ></div>
-//             </div>
-//          ) : user != null && account != null ? (
-//             <ProfileWidget user={user} account={account} />
-//          ) : (
-//             <LoginButton />
-//          )}
-//       </nav>
-//    </>

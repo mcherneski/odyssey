@@ -29,6 +29,5 @@ export async function POST(req: Request) {
          status: res.status,
       })
    }
-
    return NextResponse.json(await res.json())
 }

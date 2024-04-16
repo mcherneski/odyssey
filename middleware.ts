@@ -8,9 +8,12 @@ import {
 } from '@/routes'
 
 export default function middleware(request: NextRequest) {
-   const { nextUrl } = request;
-   console.log('Middleware nextUrl: ', nextUrl)
+   const req = request;
+   console.log('---------------------------------------------')
+   console.log('Middleware request: ', req)
 
+   const isAuthenticated = req.cookies
+   console.log('isAuthenticated: ', isAuthenticated)
    // This is the shit that redirects the url if orgId is present
    // const isOrgIdUrl = nextUrl.href.toString().includes('orgId')
    // console.log('isOrgIdUrl: ', isOrgIdUrl)
@@ -18,6 +21,8 @@ export default function middleware(request: NextRequest) {
    // if (isOrgIdUrl){
    //    return Response.redirect(new URL('/', nextUrl))
    // }
+
+
 }
 
 export const config = {

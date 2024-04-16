@@ -4,7 +4,6 @@ import {Button} from '@/components/ui/button'
 import { ProfileButton } from '@/components/profile-button'
 import { useUser, useSigner, useSignerStatus } from '@alchemy/aa-alchemy/react'
 import { useState } from 'react'
-import { LoginCard } from '@/components/auth/login-card'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 export const Navbar = () => {
@@ -13,18 +12,18 @@ export const Navbar = () => {
    const { status } = useSignerStatus()
    const user = useUser()
    const router = useRouter()
-   const searchParams = useSearchParams()
+   // const searchParams = useSearchParams()
    
-   useEffect(() => {
-      if (searchParams)
-         {
-            const strSearchParams = searchParams.toString()
-            if (strSearchParams.includes('orgId'))
-               {
-                  router.push('/')
-               }
-         }
-   },[router, searchParams])
+   // useEffect(() => {
+   //    if (searchParams)
+   //       {
+   //          const strSearchParams = searchParams.toString()
+   //          if (strSearchParams.includes('orgId'))
+   //             {
+   //                router.push('/')
+   //             }
+   //       }
+   // },[router, searchParams])
 
  
    console.log('Authenticated user: ', user)
@@ -35,8 +34,7 @@ export const Navbar = () => {
    }
    
    // Handle authentication Redirect
-   const strSearchParams = searchParams.toString()
-   if (strSearchParams.includes('orgId')) { return (<div>Please Wait...</div>)}
+
 
    return(
       <div className='flex flex-row text-center bg-cyan-500 justify-between items-center h-12'>

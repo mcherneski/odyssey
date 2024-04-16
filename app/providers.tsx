@@ -10,12 +10,12 @@ const queryClient = new QueryClient()
 export const Providers = (props: PropsWithChildren) => {
 
    return (
-      <QueryClientProvider client={queryClient}>
-         <Suspense>
-         <AlchemyAccountProvider config={config} queryClient={queryClient}>
-            {props.children}
-         </AlchemyAccountProvider>
-         </Suspense>
-      </QueryClientProvider>
+      <Suspense>
+         <QueryClientProvider client={queryClient}>
+            <AlchemyAccountProvider config={config} queryClient={queryClient}>
+               {props.children}
+            </AlchemyAccountProvider>
+         </QueryClientProvider>
+      </Suspense>
    )
 }

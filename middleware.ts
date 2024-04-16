@@ -9,11 +9,7 @@ import {
 
 export default function middleware(request: NextRequest) {
    const req = request;
-   console.log('---------------------------------------------')
-   console.log('Middleware request: ', req)
 
-   const isAuthenticated = req.cookies
-   console.log('isAuthenticated: ', isAuthenticated)
    // This is the shit that redirects the url if orgId is present
    // const isOrgIdUrl = nextUrl.href.toString().includes('orgId')
    // console.log('isOrgIdUrl: ', isOrgIdUrl)

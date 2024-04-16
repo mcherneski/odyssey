@@ -11,14 +11,9 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useAuthenticate } from '@alchemy/aa-alchemy/react'
 import { FC, useRef } from 'react'
-import { CircleX } from 'lucide-react'
+// import { CircleX } from 'lucide-react'
 
-//TODO: Exparament with changing the email from state to ref
-// interface Props {
-//    changeStep: () => void
-// }
-
-export const LoginForm: React.FC<Props> = ({}) => {
+export const LoginForm = ({}) => {
    const refEmail = useRef<string>('')
    const { authenticate, isPending } = useAuthenticate()
 
@@ -27,7 +22,6 @@ export const LoginForm: React.FC<Props> = ({}) => {
          type: 'email',
          email: refEmail.current
       })
-
    }
 
    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {

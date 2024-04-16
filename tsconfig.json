@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/page.bkp", "components/ui/oldNavbar.tsx.bkp", "components/auth/LogInCard.tsx.old", "components/ProfileCard.tsx.old", "components/auth/TurnkeyIframe.tsx.useless"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

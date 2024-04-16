@@ -26,7 +26,7 @@ export const Navbar = () => {
    console.log('Signer Status: ', status)
 
    const handleLoginClick = () => {
-      setShowAuthCard(true)
+      router.push('/auth/login')
    }
 
    const handleClose = () => {
@@ -65,7 +65,6 @@ export const Navbar = () => {
          </Button>
          )}
 
-         {showAuthCard && <LoginCard onClose={handleClose}/> }
       </div>
    )
 }

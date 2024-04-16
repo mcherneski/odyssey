@@ -1,5 +1,7 @@
 'use client'
+import { useEffect } from 'react'
 import {Button} from '@/components/ui/button'
+import { ProfileButton } from '@/components/profile-button'
 import { useUser, useSigner, useSignerStatus } from '@alchemy/aa-alchemy/react'
 import { useState } from 'react'
 import { LoginCard } from '@/components/auth/login-card'
@@ -13,14 +15,17 @@ export const Navbar = () => {
    const router = useRouter()
    const searchParams = useSearchParams()
    
-   if (searchParams)
-      {
-         const strSearchParams = searchParams.toString()
-         if (strSearchParams.includes('orgId'))
-            {
-               router.push('/')
-            }
-      }
+   useEffect(() => {
+      if (searchParams)
+         {
+            const strSearchParams = searchParams.toString()
+            if (strSearchParams.includes('orgId'))
+               {
+                  router.push('/')
+               }
+         }
+   },[router, searchParams])
+
  
    console.log('Authenticated user: ', user)
    console.log('Signer Status: ', status)
@@ -28,33 +33,16 @@ export const Navbar = () => {
    const handleLoginClick = () => {
       router.push('/auth/login')
    }
-
-   const handleClose = () => {
-      setShowAuthCard(false)
-   }
-
-   const handleLogout = async () => {
-      if (signer && user && status === 'CONNECTED') {
-         await signer.disconnect()  
-      }
-   }
+   
+   // Handle authentication Redirect
+   const strSearchParams = searchParams.toString()
+   if (strSearchParams.includes('orgId')) { return (<div>Please Wait...</div>)}
 
    return(
       <div className='flex flex-row text-center bg-cyan-500 justify-between items-center h-12'>
-         <h1
-            className='flex text-2xl m-4'
-         >
-            Odyssey
-         </h1>
+         <h1 className='flex text-2xl m-4'>Odyssey</h1>
          {status === 'CONNECTED' ? (
-            <Button
-               className='flex'
-               onClick={handleLogout}
-               variant='default'
-               size='lg'
-            >
-               Log Out
-            </Button>
+            <ProfileButton />
          ): (
             <Button
             className=''

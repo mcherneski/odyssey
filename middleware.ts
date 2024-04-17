@@ -1,5 +1,4 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import type { NextRequest, NextResponse } from 'next/server'
 import {
    DEFAULT_LOGIN_REDIRECT,
    apiAuthPrefix,
@@ -8,17 +7,14 @@ import {
 } from '@/routes'
 
 export default function middleware(request: NextRequest) {
-   const req = request;
+   console.log('Request: ', request)
+   const cookies = request.cookies.getAll()
 
-   // This is the shit that redirects the url if orgId is present
-   // const isOrgIdUrl = nextUrl.href.toString().includes('orgId')
-   // console.log('isOrgIdUrl: ', isOrgIdUrl)
+   cookies.forEach((cookie) => {
+      console.log('Cookie: ', cookie.name, cookie.value)
+   })
 
-   // if (isOrgIdUrl){
-   //    return Response.redirect(new URL('/', nextUrl))
-   // }
-
-
+   // if (request.url.)
 }
 
 export const config = {

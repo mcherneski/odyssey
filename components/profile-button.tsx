@@ -15,16 +15,13 @@ export const ProfileButton = () => {
    const signer = useSigner()
    const { status } = useSignerStatus()
    const router = useRouter()
-
-
+   
    const handleLogout = async () => {
       if (signer && status === 'CONNECTED') {
          await signer.disconnect()
          router.push('/')
       }
    }
-
-
 
    return (
       <div className='text-center'>

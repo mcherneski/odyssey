@@ -17,7 +17,7 @@ import { LoginForm } from '@/components/auth/login-form'
 //TODO: Exparament with changing the email from state to ref
 // Idea: useState to change the step of the auth process. 
 
-export const LoginCard = ({ children }: Readonly<{
+export const AuthCard = ({ children }: Readonly<{
    children: React.ReactNode
 }>) => {
    

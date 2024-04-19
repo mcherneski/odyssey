@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useAuthenticate } from '@alchemy/aa-alchemy/react'
-import { startTransition, useRef, useState } from 'react'
+import { useAuthenticate, useUser } from '@alchemy/aa-alchemy/react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { LoginSchema } from '@/schemas/index'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,6 +18,9 @@ import { FormSuccess } from '@/components/form-success'
 import { FormError } from '@/components/form-error'
 import { CardWrapper } from '@/components/card-wrapper'
 import * as z from 'zod'
+import { useRouter } from 'next/navigation'
+import { register } from '@/actions/register'
+
 
 export const LoginForm = ({}) => {
    const refEmail = useRef<string>('')
@@ -25,14 +28,8 @@ export const LoginForm = ({}) => {
    const [error, setError] = useState<string | undefined>('')
 
    const { authenticate, isPending } = useAuthenticate()
-
-   const handleLogin = () => {
-      const result = authenticate({
-         type: 'passkey',
-         createNew: false,
-      })
-      console.log('Passkey auth result: ', result)
-   }
+   const router = useRouter()
+   const user = useUser()
 
    const onSubmit = (values: z.infer<typeof LoginSchema>) => {
       console.log('Form submitted')
@@ -40,12 +37,12 @@ export const LoginForm = ({}) => {
       setSuccess('')
       console.log(values)
 
-      startTransition(() => {
-         authenticate({
-            type: 'passkey',
-            createNew: false,
-         })
+      authenticate({
+         type: 'passkey',
+         createNew: false,
       })
+
+
    }
 
    const form = useForm<z.infer<typeof LoginSchema>>({
@@ -98,31 +95,3 @@ export const LoginForm = ({}) => {
       </CardWrapper>
    )
 }
-
-
-
-// <CardHeader>
-//             <CardTitle>Log In</CardTitle>
-//             <CardDescription>Sign in via email magic link!</CardDescription>
-//          </CardHeader>
-//          <CardContent className=''>
-//             <Input
-//                type='email'
-//                placeholder='Email Address'
-//                onChange={handleEmailChange} 
-//                className='m-2 w-full'
-//             />
-//             <Button 
-//                className='w-full m-2'
-//                type='submit'
-//                variant={'default'}
-//                onClick={handleLogin}
-//                disabled={isPending}
-//             >
-//                {isPending ? 'Verifying...' : 'Log In'}
-//             </Button>
-//          </CardContent>
-//          <CardFooter>
-//             <p>{isPending ? <FormSuccess message='Please check your email'/> : ''}</p>
-//          </CardFooter>
-//       </Card>

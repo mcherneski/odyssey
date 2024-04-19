@@ -1,65 +1,115 @@
 'use client'
 import {
-   Card,
-   CardContent,
-   CardDescription, 
-   CardFooter,
-   CardHeader,
-   CardTitle
-} from '@/components/ui/card'
+   Form,
+   FormControl, 
+   FormField,
+   FormItem,
+   FormLabel,
+   FormMessage
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useAuthenticate } from '@alchemy/aa-alchemy/react'
-import { useRef } from 'react'
+import { useAuthenticate, useUser } from '@alchemy/aa-alchemy/react'
+import { useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { FormSuccess } from '@/components/form-success'
+import { FormError } from '@/components/form-error'
+import { CardWrapper } from '../card-wrapper'
+import { RegisterSchema } from '@/schemas'
+
 // import { CircleX } from 'lucide-react'
 
 export const RegisterForm = ({}) => {
    const refEmail = useRef<string>('')
-   const { authenticate, isPending } = useAuthenticate()
+   const [success, setSuccess] = useState<string | undefined>('')
+   const [createError, setError] = useState<string | undefined>('')
 
-   const handleLogin = () => {
-      const result = authenticate({
+   const { authenticate, isPending, error } = useAuthenticate()
+
+   const form = useForm<z.infer<typeof RegisterSchema>>({
+      resolver: zodResolver(RegisterSchema),
+      defaultValues: {
+         email: '',
+         username: '',
+      }
+   })
+
+   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+      console.log('Form Submitted')
+      setError('')
+      setSuccess('')
+
+      authenticate({
          type: 'passkey',
          createNew: true,
-         username: refEmail.current
+         username: values.email
       })
-      console.log('Passkey auth result: ', result)
-   }
 
-   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      refEmail.current = event.target.value
+      if (error) {
+         setError(error.message)
+      }
    }
 
    return (
-      <Card
-         className='fixed z-10 flex flex-col items-center justify-center inset-0 h-1/2 w-1/2 min-w-[400px] m-auto'
+      <CardWrapper
+         headerLabel='Find your tribe!'
+         backButtonLabel='Already have an account?'
+         backButtonHref='/auth/login'
       >
-         <CardHeader>
-            <CardTitle>Sign Up!</CardTitle>
-            <CardDescription>Connect to your tribe!</CardDescription>
-         </CardHeader>
-         <CardContent className=''>
-            <Input
-               type='email'
-               placeholder='Email Address'
-               onChange={handleEmailChange} 
-               className='m-2 w-full'
-            />
-            <Button 
-               className='w-full m-2'
+         <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}
+               className='space-y-2'
+            >
+            <div className='space-y-2'>
+               <FormField
+                  control={form.control}
+                  name='email'
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                           <Input
+                              disabled={isPending}
+                              {...field}
+                              placeholder='Email Address'
+                              type='email'
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+               <FormField 
+                  control={form.control}
+                  name='username'
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Username</FormLabel>
+                        <FormControl>
+                           <Input
+                           disabled={isPending}
+                           {...field}
+                           placeholder='Username'
+                           type="text"
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
+            <FormError message={ error } />
+            {/* <FormSuccess messagae={ success } /> */}
+            <Button
                type='submit'
-               variant={'default'}
-               onClick={handleLogin}
+               variant='default'
                disabled={isPending}
             >
-               {isPending ? 'Verifying...' : 'Log In'}
+               Sign Up
             </Button>
-         </CardContent>
-         <CardFooter>
-            <p>Privacy Information</p>
-         </CardFooter>
-      </Card>
+            </form>
+         </Form>
+      </CardWrapper>
    )
 }
-

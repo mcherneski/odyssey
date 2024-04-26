@@ -25,7 +25,15 @@ export const RegisterForm = ({}) => {
    const [success, setSuccess] = useState<string | undefined>('')
    const [createError, setError] = useState<string | undefined>('')
 
-   const { authenticate, isPending, error } = useAuthenticate()
+   // Enable after alchemy pushes updates to toolkit
+   // const { authenticate, isPending, error } = useAuthenticate({
+   //    onSuccess: (user) => {
+   //       console.log('User: ', user)
+   //    },
+   //    onError: (error) => {
+   //       console.log('Error: ', error)
+   //    }
+   // })
 
    const form = useForm<z.infer<typeof RegisterSchema>>({
       resolver: zodResolver(RegisterSchema),
@@ -46,9 +54,6 @@ export const RegisterForm = ({}) => {
          username: values.email
       })
 
-      if (error) {
-         setError(error.message)
-      }
    }
 
    return (

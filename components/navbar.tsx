@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { ProfileButton } from '@/components/profile-button'
 import { useSignerStatus } from '@alchemy/aa-alchemy/react'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
 import Spinner from './ui/loading-spinner'
 
 export const Navbar = () => {

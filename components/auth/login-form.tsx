@@ -26,8 +26,20 @@ export const LoginForm = ({}) => {
    const refEmail = useRef<string>('')
    const [success, setSuccess] = useState<string | undefined>('')
    const [error, setError] = useState<string | undefined>('')
-
-   const { authenticate, isPending } = useAuthenticate()
+   const { authenticate, isPending } = useAuthenticate({
+      onSuccess: (user) => {
+         console.log('User: ', user)
+      }
+   })
+   
+   // const { authenticate, isPending } = useAuthenticate({
+   //    onSuccess: (user) => {
+   //       console.log('Test')
+   //    },
+   //    onError: (error) => {
+   //       console.log(error)
+   //    }
+   // })
    const router = useRouter()
    const user = useUser()
 

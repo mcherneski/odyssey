@@ -20,10 +20,10 @@ enum UserRole {
 }
 
 model User {
-  id              String @unique
+  id              String @id @unique
   wallet          String?
-  email           String
-  alias           String?
+  email           String @unique
+  username        String @unique
   role            UserRole @default(USER)
 }
 

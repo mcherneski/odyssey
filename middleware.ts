@@ -7,14 +7,19 @@ import {
 } from '@/routes'
 
 export default function middleware(request: NextRequest) {
-   console.log('Request: ', request)
-   const cookies = request.cookies.getAll()
+   const { nextUrl } = request;
+   // console.log('Request data: ', request)
+   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
+   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
+   const isApiRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
 
-   cookies.forEach((cookie) => {
-      console.log('Cookie: ', cookie.name, cookie.value)
-   })
-
-   // if (request.url.)
+   if (isApiRoute) {
+      return
+   }
+   
+   if (isAuthRoute) {
+      
+   }
 }
 
 export const config = {

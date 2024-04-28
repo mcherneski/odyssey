@@ -14,26 +14,44 @@ import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormSuccess } from '@/components/form-success'
+import { useRouter } from 'next/navigation'
 import { FormError } from '@/components/form-error'
 import { CardWrapper } from '../card-wrapper'
 import { RegisterSchema } from '@/schemas'
+import { register } from '@/actions/register'
+import { getUserByEmail, getUserByUsername } from '@/data/user'
+import * as z from 'zod'
 
 // import { CircleX } from 'lucide-react'
 
 export const RegisterForm = ({}) => {
+   const refUsername = useRef<string>('')
    const refEmail = useRef<string>('')
    const [success, setSuccess] = useState<string | undefined>('')
    const [createError, setError] = useState<string | undefined>('')
+   const [allowCreate, setAllowCreate] = useState<boolean>(false)
+   const router = useRouter()
 
-   // Enable after alchemy pushes updates to toolkit
-   // const { authenticate, isPending, error } = useAuthenticate({
-   //    onSuccess: (user) => {
-   //       console.log('User: ', user)
-   //    },
-   //    onError: (error) => {
-   //       console.log('Error: ', error)
-   //    }
-   // })
+   const { authenticate, isPending, error } = useAuthenticate({
+      onSuccess: (user: any) => {
+         console.log('Alchemy user data', user)
+         console.log('User Email: ', refEmail.current)
+         console.log('Username: ', refUsername.current)
+
+         register({
+            id: user.userId,
+            email: refEmail.current,
+            username: refUsername.current,
+            wallet: user.address
+         })
+
+         router.push('/')
+      },
+      onError: (error: any) => {
+         setError(error.message)
+         console.log('Error: ', error)
+      }
+   })
 
    const form = useForm<z.infer<typeof RegisterSchema>>({
       resolver: zodResolver(RegisterSchema),
@@ -43,16 +61,63 @@ export const RegisterForm = ({}) => {
       }
    })
 
-   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+   const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
       console.log('Form Submitted')
+      console.log('Client side form values: ', values)
+
       setError('')
       setSuccess('')
-
-      authenticate({
-         type: 'passkey',
-         createNew: true,
-         username: values.email
+      refUsername.current = values.username
+      refEmail.current = values.email
+      console.log('Email value: ', values.email)
+      console.log('Username value: ', values.username)
+      
+      const reqBody = JSON.stringify({
+         email: values.email,
+         username: values.username
       })
+
+      console.log('Body: ', reqBody)
+
+      const response = await fetch('/api/new-account-checks', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: reqBody
+      })
+
+      const data = await response.json()
+      console.log('Response: ', data)
+
+
+      if (Object.keys(data).length === 0) 
+         {
+            authenticate({
+               type: 'passkey',
+               createNew: true,
+               username: values.username
+            })
+         } else {
+            console.log('Data message: ', data.body.message)
+            setError(data.body.message)
+         }
+
+      // const isExistingEmail = await getUserByEmail(values.email)
+      // const isExistingUsername = await getUserByUsername(values.username)
+
+      // console.log('Existing Email: ', isExistingEmail)
+      // console.log('Existing Username: ', isExistingUsername)
+
+      // if (!isExistingEmail && !isExistingUsername) {
+      //    authenticate({
+      //       type: 'passkey',
+      //       createNew: true,
+      //       username: values.username
+      //    })
+      // } else {
+      //    setError('User with this email already exists. Please login.')
+      // }
 
    }
 
@@ -104,7 +169,8 @@ export const RegisterForm = ({}) => {
                   )}
                />
             </div>
-            <FormError message={ error } />
+            {createError ? <FormError message={createError} /> : null}
+            {/* <FormError message={ createError | error } /> */}
             {/* <FormSuccess messagae={ success } /> */}
             <Button
                type='submit'

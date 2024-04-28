@@ -16,9 +16,8 @@ export const RegisterSchema = z.object({
 })
 
 export const NewAccountSchema = z.object({
-   id: z.string().length(1, {
+   id: z.string().min(1, {
       message: 'ID is required'
-
    }),
    email: z.string().email({
       message: 'Email is required'
@@ -26,7 +25,7 @@ export const NewAccountSchema = z.object({
    username: z.string().min(3, {
       message: 'Username must be at least 3 characters.'
    }),
-   wallet: z.string().refine(wallet => wallet.startsWith('0x') && wallet.length === 64, {
+   wallet: z.string().refine(wallet => wallet.startsWith('0x') && wallet.length === 42, {
       message: 'Invalid wallet address'
    })
 })

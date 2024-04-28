@@ -10,7 +10,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useAuthenticate, useUser } from '@alchemy/aa-alchemy/react'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { LoginSchema } from '@/schemas/index'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,41 +19,33 @@ import { FormError } from '@/components/form-error'
 import { CardWrapper } from '@/components/card-wrapper'
 import * as z from 'zod'
 import { useRouter } from 'next/navigation'
-import { register } from '@/actions/register'
-
 
 export const LoginForm = ({}) => {
-   const refEmail = useRef<string>('')
    const [success, setSuccess] = useState<string | undefined>('')
    const [error, setError] = useState<string | undefined>('')
-   const { authenticate, isPending } = useAuthenticate({
-      onSuccess: (user) => {
-         console.log('User: ', user)
-      }
-   })
-   
-   // const { authenticate, isPending } = useAuthenticate({
-   //    onSuccess: (user) => {
-   //       console.log('Test')
-   //    },
-   //    onError: (error) => {
-   //       console.log(error)
-   //    }
-   // })
    const router = useRouter()
    const user = useUser()
+
+   const { authenticate, isPending } = useAuthenticate({
+      onSuccess: (user: any) => {
+        console.log('User data', user)
+        router.push('/')
+      },
+      onError: (error: any) => {
+        console.log('Error', error)
+      },
+    })
 
    const onSubmit = (values: z.infer<typeof LoginSchema>) => {
       console.log('Form submitted')
       setError('')
       setSuccess('')
-      console.log(values)
+      console.log('Client side form values: ', values)
 
-      authenticate({
-         type: 'passkey',
-         createNew: false,
-      })
-
+         authenticate({
+            type: 'passkey',
+            createNew: false,
+         })
 
    }
 

@@ -7,11 +7,16 @@ import { getUserByEmail } from '@/data/user'
 
 
 export const register = async (values: z.infer<typeof NewAccountSchema>) => {
-   let role;
+   console.log('Register values: ', values)
+   console.log('Id type: ', typeof values.id)
+   console.log('Wallet type: ', typeof values.wallet)
+
    const validatedFields = NewAccountSchema.safeParse(values)
+      
    if (!validatedFields.success) {
       throw new Error('Invalid fields')
    }
+
    const { id, email, username, wallet } = validatedFields.data
 
    const existingUser = await getUserByEmail(email)
@@ -19,7 +24,6 @@ export const register = async (values: z.infer<typeof NewAccountSchema>) => {
    if (existingUser) {
       return {error: 'Email already exists.'}
    }
-
 
    await db.user.create({
       data: {

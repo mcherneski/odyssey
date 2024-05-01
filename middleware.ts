@@ -6,6 +6,8 @@ import {
    publicRoutes
 } from '@/routes'
 
+export { auth as middleware } from '@/auth'
+
 export default function middleware(request: NextRequest) {
    const { nextUrl } = request;
    // console.log('Request data: ', request)

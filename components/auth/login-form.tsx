@@ -19,17 +19,21 @@ import { FormError } from '@/components/form-error'
 import { CardWrapper } from '@/components/card-wrapper'
 import * as z from 'zod'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/webauthn'
+
 
 export const LoginForm = ({}) => {
    const [success, setSuccess] = useState<string | undefined>('')
    const [error, setError] = useState<string | undefined>('')
    const router = useRouter()
    const user = useUser()
+   const { data: session, update, status } = useSession()
 
    const { authenticate, isPending } = useAuthenticate({
       onSuccess: (user: any) => {
         console.log('User data', user)
-        router.push('/')
+      //   router.push('/')
       },
       onError: (error: any) => {
         console.log('Error', error)
